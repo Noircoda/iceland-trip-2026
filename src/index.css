@@ -1,0 +1,105 @@
+@import 'tailwindcss';
+@import 'maplibre-gl/dist/maplibre-gl.css';
+
+:root {
+  --day-color: #f97316;
+  font-family: 'Segoe UI', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', system-ui, sans-serif;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  overscroll-behavior: none;
+}
+
+body {
+  background: #0b1d33;
+  color: #1e293b;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------- 地圖 marker ---------- */
+.stop-marker {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  border-radius: 9999px;
+  background: var(--mk-color, #f97316);
+  border: 2.5px solid #fff;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: marker-in 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+.stop-marker .mk-num {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 3px;
+  border-radius: 9999px;
+  background: #0f172a;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #fff;
+}
+.stop-marker:hover { transform: scale(1.18); z-index: 5; }
+.stop-marker.active {
+  transform: scale(1.32);
+  z-index: 10;
+}
+.stop-marker.active::after {
+  content: '';
+  position: absolute;
+  inset: -7px;
+  border-radius: 9999px;
+  border: 3px solid var(--mk-color, #f97316);
+  animation: pulse-ring 1.6s ease-out infinite;
+}
+.day-marker {
+  width: 38px;
+  height: 38px;
+  border-radius: 9999px;
+  background: var(--mk-color, #f97316);
+  border: 3px solid #fff;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.4);
+  color: #fff;
+  font-weight: 800;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: marker-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+.day-marker:hover { transform: scale(1.2); }
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.75); opacity: 0.9; }
+  100% { transform: scale(1.45); opacity: 0; }
+}
+@keyframes marker-in {
+  from { transform: scale(0) translateY(-14px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* ---------- 細捲軸 ---------- */
+.thin-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
+.thin-scroll::-webkit-scrollbar-thumb { background: rgb(100 116 139 / 0.35); border-radius: 99px; }
+.thin-scroll::-webkit-scrollbar-track { background: transparent; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+/* maplibre 控制鈕微調 */
+.maplibregl-ctrl-bottom-left .maplibregl-ctrl { margin-bottom: 6px; }
+.maplibregl-ctrl-attrib { font-size: 9px; opacity: 0.75; }

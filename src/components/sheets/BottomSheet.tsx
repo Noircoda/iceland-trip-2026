@@ -1,0 +1,50 @@
+import { motion, type PanInfo } from 'framer-motion';
+import { useEffect, useState, type ReactNode } from 'react';
+import { useTrip } from '../../store/useTrip';
+
+export default function BottomSheet({ children }: { children: ReactNode }) {
+  const snap = useTrip(s => s.sheetSnap);
+  const setSnap = useTrip(s => s.setSheetSnap);
+  const [vh, setVh] = useState(window.innerHeight);
+
+  useEffect(() => {
+    const onResize = () => setVh(window.innerHeight);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  const HEIGHT = Math.round(vh * 0.86);
+  const SNAPS = [148, Math.round(vh * 0.45), HEIGHT];
+  const y = HEIGHT - SNAPS[snap];
+
+  const onDragEnd = (_: unknown, info: PanInfo) => {
+    const dy = info.offset.y + info.velocity.y * 0.15;
+    if (dy < -40) setSnap(Math.min(2, snap + 1) as 0 | 1 | 2);
+    else if (dy > 40) setSnap(Math.max(0, snap - 1) as 0 | 1 | 2);
+  };
+
+  return (
+    <motion.div
+      className="pointer-events-auto fixed inset-x-0 bottom-0 z-30"
+      style={{ height: HEIGHT }}
+      initial={{ y: HEIGHT }}
+      animate={{ y }}
+      exit={{ y: HEIGHT }}
+      transition={{ type: 'spring', damping: 30, stiffness: 320 }}
+    >
+      <div className="flex h-full flex-col overflow-hidden rounded-t-2xl shadow-[0_-8px_30px_rgb(0,0,0,0.18)]">
+        <motion.div
+          drag="y"
+          dragConstraints={{ top: 0, bottom: 0 }}
+          dragElastic={0.2}
+          onDragEnd={onDragEnd}
+          onTap={() => snap === 0 && setSnap(1)}
+          className="flex cursor-grab touch-none items-center justify-center rounded-t-2xl bg-slate-50/95 pb-1 pt-2.5 backdrop-blur active:cursor-grabbing"
+        >
+          <div className="h-1.5 w-11 rounded-full bg-slate-300" />
+        </motion.div>
+        <div className="flex-1 overflow-hidden">{children}</div>
+      </div>
+    </motion.div>
+  );
+}
