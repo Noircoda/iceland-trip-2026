@@ -39,9 +39,10 @@ export default function BottomSheet({ children }: { children: ReactNode }) {
           dragElastic={0.2}
           onDragEnd={onDragEnd}
           onTap={() => snap === 0 && setSnap(1)}
-          className="flex cursor-grab touch-none items-center justify-center rounded-t-2xl bg-slate-50/95 pb-1 pt-2.5 backdrop-blur active:cursor-grabbing"
+          className="flex cursor-grab touch-none items-center justify-center rounded-t-2xl pb-1 pt-2.5 backdrop-blur active:cursor-grabbing"
+          style={{ background: 'var(--paper)' }}
         >
-          <div className="h-1.5 w-11 rounded-full bg-slate-300" />
+          <div className="h-1.5 w-10 rounded-full" style={{ background: 'var(--hairline)' }} />
         </motion.div>
         <div className="flex-1 overflow-hidden">{children}</div>
       </div>

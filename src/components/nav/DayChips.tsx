@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { ChevronLeft } from 'lucide-react';
 import { DAYS } from '../../data/itinerary';
 import { useTrip } from '../../store/useTrip';
 
@@ -18,9 +19,9 @@ export default function DayChips() {
     <div className="pointer-events-auto flex items-center gap-1.5">
       <button
         onClick={backToOverview}
-        className="glass-dark shrink-0 rounded-full px-3 py-1.5 text-xs font-bold text-white transition hover:bg-slate-800"
+        className="glass-dark flex shrink-0 items-center gap-0.5 rounded-full py-1.5 pl-2 pr-3 text-xs font-semibold text-white/90 transition hover:text-white"
       >
-        ← 總覽
+        <ChevronLeft size={14} strokeWidth={2.2} /> 總覽
       </button>
       <div ref={ref} className="flex gap-1.5 overflow-x-auto no-scrollbar">
         {DAYS.map(day => {
@@ -30,19 +31,15 @@ export default function DayChips() {
               key={day.day}
               data-day={day.day}
               onClick={() => enterDay(day.day)}
-              className="shrink-0 rounded-full px-3 py-1.5 text-xs font-bold shadow backdrop-blur transition-all"
+              className="shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition-all"
               style={
                 active
-                  ? {
-                      background: `linear-gradient(135deg, ${day.color}, color-mix(in srgb, ${day.color} 75%, #0f172a))`,
-                      color: '#fff',
-                      boxShadow: `0 4px 14px color-mix(in srgb, ${day.color} 45%, transparent)`,
-                    }
-                  : { background: 'rgba(255,255,255,0.88)', color: '#334155' }
+                  ? { background: day.color, color: '#fff', boxShadow: 'var(--shadow-sm)' }
+                  : { background: 'rgba(255,255,255,0.86)', color: 'var(--ink-soft)', boxShadow: 'var(--shadow-sm)' }
               }
             >
               D{day.day}
-              <span className={`ml-1 font-semibold ${active ? 'text-white/85' : 'text-slate-400'}`}>
+              <span className={active ? 'ml-1 text-white/75' : 'ml-1 text-[var(--ink-faint)]'}>
                 {day.date.slice(5).replace('-', '/')}
               </span>
             </button>

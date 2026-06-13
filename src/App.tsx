@@ -15,19 +15,20 @@ function Splash() {
     <AnimatePresence>
       {!mapReady && (
         <motion.div
-          className="fixed inset-0 z-[70] flex flex-col items-center justify-center bg-[#0b1d33]"
+          className="fixed inset-0 z-[70] flex flex-col items-center justify-center bg-[#0e1620]"
           initial={false}
           exit={{ opacity: 0, transition: { duration: 0.5 } }}
         >
-          <img src={`${import.meta.env.BASE_URL}icons/icon.svg`} alt="" className="splash-icon h-24 w-24 rounded-3xl shadow-2xl" />
-          <p className="mt-5 text-lg font-black tracking-widest text-white">
-            冰島環島手冊 <span className="aurora-text">2026</span>
+          <img src={`${import.meta.env.BASE_URL}icons/icon.svg`} alt="" className="splash-icon h-24 w-24 rounded-3xl" />
+          <p className="mt-5 text-lg font-semibold tracking-widest text-white">
+            冰島環島手冊 <span className="brand-accent font-bold">2026</span>
           </p>
           <div className="mt-4 flex gap-1.5">
             {[0, 1, 2].map(i => (
               <motion.span
                 key={i}
-                className="h-2 w-2 rounded-full bg-sky-400"
+                className="h-2 w-2 rounded-full"
+                style={{ background: '#7fa8c9' }}
                 animate={{ opacity: [0.25, 1, 0.25], scale: [0.8, 1.15, 0.8] }}
                 transition={{ repeat: Infinity, duration: 1.1, delay: i * 0.18 }}
               />
@@ -53,8 +54,8 @@ function OfflineBanner() {
   }, []);
   if (online) return null;
   return (
-    <div className="pointer-events-none fixed left-1/2 top-2 z-[60] -translate-x-1/2 rounded-full bg-amber-500/95 px-4 py-1.5 text-xs font-bold text-white shadow-lg">
-      📡 離線模式：行程資料可用，地圖僅顯示看過的區域
+    <div className="glass-dark pointer-events-none fixed left-1/2 top-2 z-[60] -translate-x-1/2 rounded-full px-4 py-1.5 text-xs font-medium text-white">
+      離線模式：行程資料可用，地圖僅顯示看過的區域
     </div>
   );
 }

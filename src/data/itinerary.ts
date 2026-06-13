@@ -1,6 +1,8 @@
 // 冰島 10 日行程資料（2026/7/12–7/21）— 來源：完整行程規劃.md v2
 // 座標：scripts/coords.json（Google Maps 短連結解析，pin 級精度）；少數為城鎮近似值（標 approx）
 
+import { ENRICHMENT } from './enrichment';
+
 export type StopType = '景點' | '餐廳' | '活動' | '採買' | '住宿' | '交通' | '加油';
 export type Badge = '需預約' | '自理' | '備選' | '雨備' | '安全';
 
@@ -26,6 +28,8 @@ export interface Stop {
   badges?: Badge[];
   cutPriority?: 1 | 2 | 3; // 延誤先砍順序（1 最先砍）
   links?: { official?: string; booking?: string };
+  infoUrl?: string;
+  infoLabel?: string;
 }
 
 export interface Day {
@@ -49,7 +53,7 @@ export const TRIP_END = '2026-07-21';
 
 export const DAYS: Day[] = [
   {
-    day: 1, date: '2026-07-12', weekday: '週日', color: '#f97316',
+    day: 1, date: '2026-07-12', weekday: '週日', color: '#ad7c5c',
     title: '抵達・Costco・雷克雅維克初見',
     summary: '09:25 降落 KEF → 取車 → Costco 採買 → 市區散步 → Matarkjallarinn 晚餐 → 宿機場附近',
     driveKm: 110, driveTime: '1h40m', sunrise: '03:30', sunset: '23:20',
@@ -69,7 +73,7 @@ export const DAYS: Day[] = [
     ],
   },
   {
-    day: 2, date: '2026-07-13', weekday: '週一', color: '#10b981',
+    day: 2, date: '2026-07-13', weekday: '週一', color: '#6f8f74',
     title: '黃金圈',
     summary: 'Sandholt 早餐 → Þingvellir → Friðheimar 蕃茄午餐 → Geysir → Gullfoss → Kerið → 宿瀑布旁小木屋',
     driveKm: 300, driveTime: '4h（含 Brúarfoss）', sunrise: '03:32', sunset: '23:15',
@@ -89,7 +93,7 @@ export const DAYS: Day[] = [
     ],
   },
   {
-    day: 3, date: '2026-07-14', weekday: '週二', color: '#3b82f6',
+    day: 3, date: '2026-07-14', weekday: '週二', color: '#5f7d99',
     title: '南岸瀑布＋冰川健行',
     summary: 'Skógafoss → Sólheimajökull 冰川健行 → DC-3 → Dyrhólaey → 黑沙灘 → Vík 晚餐 → 宿 Skógar 西側',
     driveKm: 150, driveTime: '2h30m', sunrise: '03:38', sunset: '23:05',
@@ -108,7 +112,7 @@ export const DAYS: Day[] = [
     ],
   },
   {
-    day: 4, date: '2026-07-15', weekday: '週三', color: '#8b5cf6',
+    day: 4, date: '2026-07-15', weekday: '週三', color: '#847e9e',
     title: '羽毛峽谷・Skaftafell・冰河湖',
     summary: '羽毛峽谷 → Svartifoss 健行 → Fjallsárlón → Jökulsárlón 船遊＋鑽石沙灘 → 宿 Höfn',
     driveKm: 360, driveTime: '4h20m', sunrise: '03:35', sunset: '23:00',
@@ -126,7 +130,7 @@ export const DAYS: Day[] = [
     ],
   },
   {
-    day: 5, date: '2026-07-16', weekday: '週四', color: '#f59e0b',
+    day: 5, date: '2026-07-16', weekday: '週四', color: '#ac9560',
     title: '蝙蝠山・東峽灣・白日夢小鎮＋傍晚 Puffin',
     summary: 'Vestrahorn → Djúpivogur → Egilsstaðir 補給 → Seyðisfjörður → 宿 Eiðar →（傍晚）Hafnarhólmi 海鸚',
     driveKm: 290, driveTime: '4h15m（+puffin 來回 1h50）', sunrise: '03:10', sunset: '23:25',
@@ -143,7 +147,7 @@ export const DAYS: Day[] = [
     ],
   },
   {
-    day: 6, date: '2026-07-17', weekday: '週五', color: '#ef4444',
+    day: 6, date: '2026-07-17', weekday: '週五', color: '#a9706a',
     title: 'Dettifoss・米湖地熱區・溫泉',
     summary: 'Dettifoss → Hverir → Krafla → Vogafjós 午餐 → 米湖景點 → 溫泉 → Goðafoss → 宿 Akureyri',
     driveKm: 370, driveTime: '5h', sunrise: '03:05', sunset: '23:31',
@@ -154,7 +158,7 @@ export const DAYS: Day[] = [
       { id: 'd6-hverir', name: 'Hverir 地熱谷', nameLocal: 'Hverir', type: '景點', icon: '♨️', coord: [-16.8093, 65.6409], timeStart: '13:00', timeEnd: '13:45', driveFromPrev: { km: 56, min: 45 }, desc: '橘紅大地上的沸騰泥漿池與蒸氣塔，火星般的地景。', tips: ['⚠️ 勿離步道，蒸氣會燙傷'], badges: ['安全'] },
       { id: 'd6-krafla', name: 'Krafla 火山 Víti 火口湖', nameLocal: 'Krafla Víti', type: '景點', icon: '🌋', coord: [-16.7544, 65.7171], timeStart: '13:55', timeEnd: '14:30', driveFromPrev: { km: 9, min: 15 }, desc: '藍綠色火口湖，繞湖緣一圈 30–45 分（或只看觀景點 15 分）。途經地熱電廠管線陣。', cutPriority: 2 },
       { id: 'd6-vogafjos', name: '午餐：Vogafjós 農場餐廳', nameLocal: 'Vogafjós Farm Resort', type: '餐廳', icon: '🐄', coord: [-16.9217, 65.6266], timeStart: '15:00', timeEnd: '16:15', driveFromPrev: { km: 17, min: 18 }, desc: '隔著玻璃看牛舍用餐：自家煙燻北極紅點鮭、慢燉羊腿、地熱黑麥麵包、農場冰淇淋。本日正餐。', tips: ['熱門建議訂位', '備援：Gamli Bærinn、Daddi’s Pizza'], rating: 4.5, badges: ['需預約'], links: { official: 'https://www.vogafjosfarmresort.is' } },
-      { id: 'd6-grjotagja', name: 'Grjótagjá 洞穴溫泉', nameLocal: 'Grjótagjá', type: '景點', icon: '🕯️', coord: [-16.8829, 65.6262], timeStart: '16:25', timeEnd: '16:40', driveFromPrev: { km: 4, min: 6 }, desc: '《冰與火之歌》場景的地下溫泉洞穴。', tips: ['⚠️ 已禁止入內與泡水，洞口拍照即可'] },
+      { id: 'd6-grjotagja', name: 'Grjótagjá 洞穴溫泉', nameLocal: 'Grjótagjá', type: '景點', icon: '🕯️', coord: [-16.8829, 65.6262], timeStart: '16:25', timeEnd: '16:40', driveFromPrev: { km: 4, min: 6 }, desc: '《冰與火之歌》場景的地下溫泉洞穴。', tips: ['⚠️ 已禁止泡水（可進洞、洞口拍照）'] },
       { id: 'd6-hverfjall', name: 'Hverfjall 火山口登頂（或 Dimmuborgir 擇一）', nameLocal: 'Hverfjall', type: '景點', icon: '⛰️', coord: [-16.8717, 65.6086], timeStart: '16:50', timeEnd: '17:40', driveFromPrev: { km: 5, min: 10 }, desc: '2,500 年前的火山渣環，登頂 20–30 分俯瞰米湖全景。另一選擇：Dimmuborgir 黑色城堡熔岩迷宮（免費，環線 30–60 分）。', tips: ['停車 1,000 ISK（車牌辨識）'], badges: ['備選'], cutPriority: 1 },
       { id: 'd6-myvatnbaths', name: '米湖溫泉 Earth Lagoon', nameLocal: 'Jarðböðin við Mývatn', type: '活動', icon: '🛁', coord: [-16.8476, 65.6309], timeStart: '18:00', timeEnd: '20:00', driveFromPrev: { km: 6, min: 8 }, desc: '米湖版藍湖：乳藍色地熱溫泉俯瞰湖景，比藍湖便宜且人少。', tips: ['⚠️ 改建中、2026 夏重開（行前必確認）；未重開→改 Akureyri 的 Forest Lagoon 晚場', '~7,900 ISK 起'], badges: ['需預約'], links: { booking: 'https://www.earthlagoon.is' } },
       { id: 'd6-godafoss', name: '眾神瀑布', nameLocal: 'Goðafoss', type: '景點', icon: '🌀', coord: [-17.5502, 65.6828], timeStart: '20:45', timeEnd: '21:30', driveFromPrev: { km: 53, min: 40 }, desc: '馬蹄形的「眾神瀑布」——西元 1000 年改宗時異教神像被投入此瀑。永晝傍晚光線最美。', tips: ['兩岸都有步道'] },
@@ -162,7 +166,7 @@ export const DAYS: Day[] = [
     ],
   },
   {
-    day: 7, date: '2026-07-18', weekday: '週六', color: '#14b8a6',
+    day: 7, date: '2026-07-18', weekday: '週六', color: '#5d8782',
     title: '賞鯨・冰島馬・犀牛石',
     summary: 'Akureyri 港賞鯨 → Helluland 騎馬 → Kolugljúfur → Hvítserkur → Sjávarborg 晚餐 → 宿 Staður',
     driveKm: 350, driveTime: '5h', sunrise: '03:09', sunset: '23:28',
@@ -180,7 +184,7 @@ export const DAYS: Day[] = [
     ],
   },
   {
-    day: 8, date: '2026-07-19', weekday: '週日', color: '#ec4899',
+    day: 8, date: '2026-07-19', weekday: '週日', color: '#9c7a8c',
     title: '斯奈山半島',
     summary: 'Kirkjufell → Ólafsvík 午餐 → Saxhóll → Vatnshellir 熔岩洞 → Djúpalónssandur → Lóndrangar → Hellnar 魚湯 → 宿 Arnarstapi',
     driveKm: 300, driveTime: '4h15m', sunrise: '03:50', sunset: '23:05',
@@ -202,7 +206,7 @@ export const DAYS: Day[] = [
     ],
   },
   {
-    day: 9, date: '2026-07-20', weekday: '週一', color: '#6366f1',
+    day: 9, date: '2026-07-20', weekday: '週一', color: '#6a7197',
     title: '回雷克雅維克：購物＋Sky Lagoon',
     summary: '黑教堂 → 海豹灘 → Borgarnes → 亞洲超市 → 市區購物 → Sky Lagoon → Messinn 晚餐 → 宿市區',
     driveKm: 215, driveTime: '2h50m', sunrise: '03:52', sunset: '23:03',
@@ -221,7 +225,7 @@ export const DAYS: Day[] = [
     ],
   },
   {
-    day: 10, date: '2026-07-21', weekday: '週二', color: '#64748b',
+    day: 10, date: '2026-07-21', weekday: '週二', color: '#79828f',
     title: '離境：BA801 10:20 → 倫敦',
     summary: '06:15 出發 → Njarðvík 加油 → 還車 → 退稅 → 10:20 起飛（14:25 抵 LHR）',
     driveKm: 50, driveTime: '50m', sunrise: '03:59', sunset: '22:57',
@@ -234,6 +238,17 @@ export const DAYS: Day[] = [
     ],
   },
 ];
+
+// 合併研究工作流的擴充說明與「相關資訊」連結（覆寫 desc、補上 infoUrl/infoLabel）
+for (const d of DAYS) {
+  for (const s of d.stops) {
+    const e = ENRICHMENT[s.id];
+    if (!e) continue;
+    s.desc = e.desc;
+    if (e.infoUrl) s.infoUrl = e.infoUrl;
+    if (e.infoLabel) s.infoLabel = e.infoLabel;
+  }
+}
 
 export const TRIP_STATS = {
   days: DAYS.length,
