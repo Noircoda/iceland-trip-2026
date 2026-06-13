@@ -13,10 +13,9 @@ export default function BottomSheet({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  // 三段：窺視（看地圖）／預設（看 ≥3 個停靠點）／全開
-  const HEIGHT = Math.round(vh * 0.93);
-  const SNAPS = [Math.round(vh * 0.26), Math.round(vh * 0.74), HEIGHT];
-  const y = HEIGHT - SNAPS[snap];
+  // 用「高度」而非位移定位 → 抽屜永遠貼齊螢幕底、內容不會被推到畫面外（最後一張卡才不會被 TabBar 擋住）
+  const SNAPS = [Math.round(vh * 0.3), Math.round(vh * 0.74), Math.round(vh * 0.95)];
+  const height = SNAPS[snap];
 
   const onDragEnd = (_: unknown, info: PanInfo) => {
     const dy = info.offset.y + info.velocity.y * 0.15;
@@ -26,27 +25,24 @@ export default function BottomSheet({ children }: { children: ReactNode }) {
 
   return (
     <motion.div
-      className="pointer-events-auto fixed inset-x-0 bottom-0 z-30"
-      style={{ height: HEIGHT }}
-      initial={{ y: HEIGHT }}
-      animate={{ y }}
-      exit={{ y: HEIGHT }}
-      transition={{ type: 'spring', damping: 30, stiffness: 320 }}
+      className="pointer-events-auto fixed inset-x-0 bottom-0 z-30 flex flex-col overflow-hidden rounded-t-2xl shadow-[0_-8px_30px_rgb(0,0,0,0.18)]"
+      initial={{ height: 0 }}
+      animate={{ height }}
+      exit={{ height: 0 }}
+      transition={{ type: 'spring', damping: 32, stiffness: 340 }}
     >
-      <div className="flex h-full flex-col overflow-hidden rounded-t-2xl shadow-[0_-8px_30px_rgb(0,0,0,0.18)]">
-        <motion.div
-          drag="y"
-          dragConstraints={{ top: 0, bottom: 0 }}
-          dragElastic={0.2}
-          onDragEnd={onDragEnd}
-          onTap={() => snap === 0 && setSnap(1)}
-          className="flex cursor-grab touch-none items-center justify-center rounded-t-2xl pb-1 pt-2.5 backdrop-blur active:cursor-grabbing"
-          style={{ background: 'var(--paper)' }}
-        >
-          <div className="h-1.5 w-10 rounded-full" style={{ background: 'var(--hairline)' }} />
-        </motion.div>
-        <div className="flex-1 overflow-hidden">{children}</div>
-      </div>
+      <motion.div
+        drag="y"
+        dragConstraints={{ top: 0, bottom: 0 }}
+        dragElastic={0.18}
+        onDragEnd={onDragEnd}
+        onTap={() => snap === 0 && setSnap(1)}
+        className="flex shrink-0 cursor-grab touch-none items-center justify-center rounded-t-2xl pb-1 pt-2.5 active:cursor-grabbing"
+        style={{ background: 'var(--paper)' }}
+      >
+        <div className="h-1.5 w-10 rounded-full" style={{ background: 'var(--hairline)' }} />
+      </motion.div>
+      <div className="min-h-0 flex-1 overflow-hidden">{children}</div>
     </motion.div>
   );
 }

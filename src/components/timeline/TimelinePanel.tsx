@@ -156,7 +156,7 @@ export default function TimelinePanel() {
         </div>
       </div>
 
-      <div className="px-3 pb-28 pt-2.5 lg:pb-6">
+      <div className="px-3 pb-[calc(88px+env(safe-area-inset-bottom))] pt-2.5 lg:pb-6">
         {/* 今日餐食 */}
         {day.meals && (
           <div className="mb-2 flex gap-2 rounded-xl px-3 py-1.5" style={{ background: 'var(--paper-raised)', border: '1px solid var(--hairline)' }}>
