@@ -1,4 +1,4 @@
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import MapCanvas from './components/map/MapCanvas';
 import Overview from './components/pages/Overview';
@@ -8,6 +8,36 @@ import Info from './components/pages/Info';
 import StopDetail from './components/sheets/StopDetail';
 import TabBar from './components/nav/TabBar';
 import { useTrip } from './store/useTrip';
+
+function Splash() {
+  const mapReady = useTrip(s => s.mapReady);
+  return (
+    <AnimatePresence>
+      {!mapReady && (
+        <motion.div
+          className="fixed inset-0 z-[70] flex flex-col items-center justify-center bg-[#0b1d33]"
+          initial={false}
+          exit={{ opacity: 0, transition: { duration: 0.5 } }}
+        >
+          <img src={`${import.meta.env.BASE_URL}icons/icon.svg`} alt="" className="splash-icon h-24 w-24 rounded-3xl shadow-2xl" />
+          <p className="mt-5 text-lg font-black tracking-widest text-white">
+            冰島環島手冊 <span className="aurora-text">2026</span>
+          </p>
+          <div className="mt-4 flex gap-1.5">
+            {[0, 1, 2].map(i => (
+              <motion.span
+                key={i}
+                className="h-2 w-2 rounded-full bg-sky-400"
+                animate={{ opacity: [0.25, 1, 0.25], scale: [0.8, 1.15, 0.8] }}
+                transition={{ repeat: Infinity, duration: 1.1, delay: i * 0.18 }}
+              />
+            ))}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
 
 function OfflineBanner() {
   const [online, setOnline] = useState(navigator.onLine);
@@ -46,6 +76,7 @@ export default function App() {
       <TabBar />
       <AnimatePresence>{detailStopId && <StopDetail key={detailStopId} stopId={detailStopId} />}</AnimatePresence>
       <OfflineBanner />
+      <Splash />
     </div>
   );
 }

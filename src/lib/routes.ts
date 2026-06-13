@@ -54,4 +54,4 @@ export function dayBounds(day: Day, fc?: RouteFC): [[number, number], [number, n
   return [[minLng, minLat], [maxLng, maxLat]];
 }
 
-export const ICELAND_BOUNDS: [[number, number], [number, number]] = [[-24.7, 63.2], [-13.3, 66.4]];
+export const ICELAND_BOUNDS: [[number, number], [number, number]] = [[-25.3, 63.1], [-12.8, 66.6]];

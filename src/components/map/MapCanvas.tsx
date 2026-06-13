@@ -63,6 +63,7 @@ export default function MapCanvas() {
       attributionControl: { compact: true },
     });
     mapRef.current = map;
+    if (import.meta.env.DEV) (window as unknown as { __map: maplibregl.Map }).__map = map;
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
     map.addControl(
       new maplibregl.GeolocateControl({ positionOptions: { enableHighAccuracy: true }, trackUserLocation: true }),
@@ -116,6 +117,7 @@ export default function MapCanvas() {
         paint: { 'line-color': '#fff', 'line-width': 4.5, 'line-opacity': 0.95 },
       });
       setReady(true);
+      useTrip.getState().setMapReady();
     });
 
     const ro = new ResizeObserver(() => map.resize());
@@ -222,19 +224,30 @@ export default function MapCanvas() {
     markersRef.current.clear();
     if (mode === 'none') return;
 
+    // 注意：外層 wrapper 由 MapLibre 以 inline transform 定位，縮放/動畫只能作用在內層
+    const makeWrapped = (innerClass: string, color: string, delayMs: number, html: string, title: string, onClick: () => void) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'mk-wrap';
+      wrap.title = title;
+      const inner = document.createElement('div');
+      inner.className = innerClass;
+      inner.style.setProperty('--mk-color', color);
+      inner.style.animationDelay = `${delayMs}ms`;
+      inner.innerHTML = html;
+      wrap.appendChild(inner);
+      wrap.addEventListener('click', e => {
+        e.stopPropagation();
+        onClick();
+      });
+      return wrap;
+    };
+
     if (mode === 'overview') {
       DAYS.forEach((day, i) => {
         const lodging = [...day.stops].reverse().find(s => s.type === '住宿') ?? day.stops[day.stops.length - 1];
-        const el = document.createElement('div');
-        el.className = 'day-marker';
-        el.style.setProperty('--mk-color', day.color);
-        el.style.animationDelay = `${i * 60}ms`;
-        el.textContent = `D${day.day}`;
-        el.title = `Day ${day.day}｜${day.title}`;
-        el.addEventListener('click', e => {
-          e.stopPropagation();
-          useTrip.getState().enterDay(day.day);
-        });
+        const el = makeWrapped('day-marker', day.color, i * 60, `D${day.day}`, `Day ${day.day}｜${day.title}`, () =>
+          useTrip.getState().enterDay(day.day),
+        );
         const mk = new maplibregl.Marker({ element: el }).setLngLat(lodging.coord).addTo(map);
         markersRef.current.set(`ov-${day.day}`, mk);
       });
@@ -243,20 +256,14 @@ export default function MapCanvas() {
 
     const day = dayOf(useTrip.getState().activeDay);
     day.stops.forEach((stop: Stop, i: number) => {
-      const el = document.createElement('div');
-      el.className = 'stop-marker';
-      el.style.setProperty('--mk-color', day.color);
-      el.style.animationDelay = `${i * 45}ms`;
-      el.innerHTML = `${stop.icon}<span class="mk-num">${i + 1}</span>`;
-      el.title = stop.name;
-      el.addEventListener('click', e => {
-        e.stopPropagation();
-        useTrip.getState().openDetail(stop.id);
-      });
+      const el = makeWrapped('stop-marker', day.color, i * 45, `${stop.icon}<span class="mk-num">${i + 1}</span>`, stop.name, () =>
+        useTrip.getState().openDetail(stop.id),
+      );
       const mk = new maplibregl.Marker({ element: el }).setLngLat(stop.coord).addTo(map);
       markersRef.current.set(stop.id, mk);
     });
   }
 
-  return <div ref={containerRef} className="absolute inset-0" />;
+  // inline style：maplibre 的無 layer CSS（.maplibregl-map{position:relative}）會蓋過 @layer 內的 Tailwind utilities
+  return <div ref={containerRef} style={{ position: 'absolute', inset: 0 }} />;
 }

@@ -25,8 +25,15 @@ export default function StopDetail({ stopId }: { stopId: string }) {
         transition={{ type: 'spring', damping: 28, stiffness: 320 }}
       >
         {/* 色帶標頭 */}
-        <div className="relative overflow-hidden px-5 pb-4 pt-5" style={{ background: `linear-gradient(150deg, ${day.color}, ${day.color}b8)` }}>
-          <span className="pointer-events-none absolute -right-3 -top-5 select-none text-[88px] opacity-20">{stop.icon}</span>
+        <div
+          className="relative overflow-hidden px-5 pb-4 pt-5"
+          style={{ background: `linear-gradient(150deg, ${day.color}, color-mix(in srgb, ${day.color} 70%, #0f172a))` }}
+        >
+          <span
+            className="pointer-events-none absolute inset-0 opacity-[0.1]"
+            style={{ background: 'repeating-linear-gradient(135deg, #fff 0 2px, transparent 2px 14px)' }}
+          />
+          <span className="pointer-events-none absolute -right-3 -top-5 select-none text-[88px] opacity-25 drop-shadow">{stop.icon}</span>
           <button
             onClick={closeDetail}
             className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/25 text-sm font-black text-white backdrop-blur transition hover:bg-white/40"
@@ -74,8 +81,11 @@ export default function StopDetail({ stopId }: { stopId: string }) {
               href={gmapsNavUrl(stop)}
               target="_blank"
               rel="noreferrer"
-              className="col-span-2 flex items-center justify-center gap-1.5 rounded-xl py-3 text-sm font-black text-white shadow-md transition active:scale-[0.98]"
-              style={{ background: day.color }}
+              className="col-span-2 flex items-center justify-center gap-1.5 rounded-xl py-3 text-sm font-black text-white transition active:scale-[0.98]"
+              style={{
+                background: `linear-gradient(135deg, ${day.color}, color-mix(in srgb, ${day.color} 72%, #0f172a))`,
+                boxShadow: `0 6px 18px color-mix(in srgb, ${day.color} 40%, transparent)`,
+              }}
             >
               🧭 導航到這裡
             </a>

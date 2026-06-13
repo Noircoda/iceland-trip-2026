@@ -18,7 +18,7 @@ export default function DayChips() {
     <div className="pointer-events-auto flex items-center gap-1.5">
       <button
         onClick={backToOverview}
-        className="shrink-0 rounded-full bg-slate-900/85 px-3 py-1.5 text-xs font-bold text-white shadow backdrop-blur transition hover:bg-slate-900"
+        className="glass-dark shrink-0 rounded-full px-3 py-1.5 text-xs font-bold text-white transition hover:bg-slate-800"
       >
         ← 總覽
       </button>
@@ -30,11 +30,15 @@ export default function DayChips() {
               key={day.day}
               data-day={day.day}
               onClick={() => enterDay(day.day)}
-              className="shrink-0 rounded-full px-3 py-1.5 text-xs font-bold shadow backdrop-blur transition"
+              className="shrink-0 rounded-full px-3 py-1.5 text-xs font-bold shadow backdrop-blur transition-all"
               style={
                 active
-                  ? { background: day.color, color: '#fff' }
-                  : { background: 'rgba(255,255,255,0.92)', color: '#334155' }
+                  ? {
+                      background: `linear-gradient(135deg, ${day.color}, color-mix(in srgb, ${day.color} 75%, #0f172a))`,
+                      color: '#fff',
+                      boxShadow: `0 4px 14px color-mix(in srgb, ${day.color} 45%, transparent)`,
+                    }
+                  : { background: 'rgba(255,255,255,0.88)', color: '#334155' }
               }
             >
               D{day.day}

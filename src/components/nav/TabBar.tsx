@@ -13,28 +13,29 @@ export default function TabBar() {
   return (
     <>
       {/* 手機：底部列 */}
-      <nav className="fixed inset-x-0 bottom-0 z-40 flex justify-around border-t border-slate-200 bg-white/95 pb-[max(env(safe-area-inset-bottom),6px)] pt-1.5 backdrop-blur lg:hidden">
+      <nav className="glass fixed inset-x-0 bottom-0 z-40 flex justify-around pb-[max(env(safe-area-inset-bottom),6px)] pt-1.5 lg:hidden">
         {TABS.map(t => (
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className={`flex w-20 flex-col items-center gap-0.5 rounded-xl py-1 text-[11px] font-bold transition ${
+            className={`relative flex w-20 flex-col items-center gap-0.5 rounded-xl py-1 text-[11px] font-bold transition ${
               tab === t.key ? 'text-sky-600' : 'text-slate-400'
             }`}
           >
-            <span className={`text-lg transition ${tab === t.key ? 'scale-110' : ''}`}>{t.icon}</span>
+            <span className={`text-lg transition-transform duration-200 ${tab === t.key ? 'scale-115' : ''}`}>{t.icon}</span>
             {t.label}
+            {tab === t.key && <span className="absolute -top-1.5 h-1 w-7 rounded-full bg-sky-500" />}
           </button>
         ))}
       </nav>
       {/* 桌面：右上浮動 */}
-      <nav className="fixed right-4 top-4 z-40 hidden gap-1 rounded-2xl bg-white/90 p-1 shadow-lg backdrop-blur lg:flex">
+      <nav className="glass fixed right-4 top-4 z-40 hidden gap-1 rounded-2xl p-1 lg:flex">
         {TABS.map(t => (
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
             className={`rounded-xl px-3.5 py-2 text-sm font-bold transition ${
-              tab === t.key ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-100'
+              tab === t.key ? 'bg-slate-900 text-white shadow-md' : 'text-slate-600 hover:bg-white/70'
             }`}
           >
             {t.icon} {t.label}

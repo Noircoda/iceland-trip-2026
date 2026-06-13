@@ -13,7 +13,9 @@ interface TripState {
   selectSource: SelectSource;
   detailStopId: string | null;
   introDone: boolean;
+  mapReady: boolean;
   sheetSnap: 0 | 1 | 2; // 手機抽屜：0 窺視 / 1 半開 / 2 全開
+  setMapReady: () => void;
   setTab: (tab: Tab) => void;
   enterDay: (day: number) => void;
   backToOverview: () => void;
@@ -45,7 +47,9 @@ export const useTrip = create<TripState>(set => ({
   selectSource: 'auto',
   detailStopId: null,
   introDone: init.view === 'day', // 旅行中開 app 直接進當天，跳過開場
+  mapReady: false,
   sheetSnap: 1,
+  setMapReady: () => set({ mapReady: true }),
   setTab: tab => set({ tab }),
   enterDay: day => set({ view: 'day', activeDay: day, activeStopId: null, detailStopId: null, introDone: true, sheetSnap: 1 }),
   backToOverview: () => set({ view: 'overview', activeStopId: null, detailStopId: null }),
