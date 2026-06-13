@@ -13,8 +13,8 @@ function isDesktop() {
 
 /** padding 過大時依視窗縮放，避免 maplibre「cannot fit within canvas」 */
 function clampPad(p: { top: number; bottom: number; left: number; right: number }) {
-  const maxV = window.innerHeight * 0.62;
-  const maxH = window.innerWidth * 0.62;
+  const maxV = window.innerHeight * 0.82;
+  const maxH = window.innerWidth * 0.72;
   const sv = p.top + p.bottom > maxV ? maxV / (p.top + p.bottom) : 1;
   const sh = p.left + p.right > maxH ? maxH / (p.left + p.right) : 1;
   return { top: p.top * sv, bottom: p.bottom * sv, left: p.left * sh, right: p.right * sh };
@@ -24,7 +24,7 @@ function dayPadding() {
   return clampPad(
     isDesktop()
       ? { top: 90, bottom: 50, left: 480, right: 70 }
-      : { top: 120, bottom: Math.round(window.innerHeight * 0.45), left: 40, right: 40 },
+      : { top: 84, bottom: Math.round(window.innerHeight * 0.58), left: 36, right: 36 },
   );
 }
 

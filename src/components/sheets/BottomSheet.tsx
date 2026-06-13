@@ -13,8 +13,9 @@ export default function BottomSheet({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  const HEIGHT = Math.round(vh * 0.86);
-  const SNAPS = [148, Math.round(vh * 0.45), HEIGHT];
+  // 三段：窺視（看地圖）／預設（看 ≥3 個停靠點）／全開
+  const HEIGHT = Math.round(vh * 0.93);
+  const SNAPS = [Math.round(vh * 0.26), Math.round(vh * 0.74), HEIGHT];
   const y = HEIGHT - SNAPS[snap];
 
   const onDragEnd = (_: unknown, info: PanInfo) => {

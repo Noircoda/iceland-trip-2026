@@ -45,8 +45,23 @@ export interface Day {
   sunset: string;
   hardDeadlines: string[];
   flexNotes: string[];
+  meals?: { breakfast?: string; lunch?: string; dinner?: string };
   stops: Stop[];
 }
+
+// 每日餐食總覽（整理自完整行程規劃；自理會標註）
+const MEALS: Record<number, { breakfast?: string; lunch?: string; dinner?: string }> = {
+  1: { lunch: 'Costco 美食區熱狗／披薩', dinner: 'Matarkjallarinn 地窖餐廳（市區・需訂位）' },
+  2: { breakfast: 'Sandholt 烘焙坊', lunch: 'Friðheimar 蕃茄湯吃到飽（備案 Gullfoss 羊肉湯）', dinner: '自理輕食（小木屋）' },
+  3: { breakfast: '自理（小木屋）', lunch: "Mia's 炸魚薯條（排太長→改 Vík）", dinner: 'Suður-Vík（建議訂位）' },
+  4: { breakfast: '自理／車上', lunch: '自備三明治或 Skaftafell 園區簡餐（自理）', dinner: 'Pakkhús 海螯蝦' },
+  5: { breakfast: '自理', lunch: 'Langabúð 老屋輕食（Djúpivogur）', dinner: '自理（或回 Egilsstaðir Salt Café）' },
+  6: { breakfast: '自理', lunch: 'Vogafjós 農場餐廳（建議訂位・本日正餐）', dinner: '輕食自理／Akureyri 宵夜（Brynja 冰淇淋）' },
+  7: { breakfast: 'Akureyri（住宿／Brynja 旁）', lunch: '車上路餐（自理）', dinner: 'Sjávarborg（Hvammstangi・需訂位）' },
+  8: { breakfast: '自理', lunch: 'Sker 海鮮（Ólafsvík）', dinner: 'Fjöruhúsið 魚湯（備案 Arnarbær）' },
+  9: { breakfast: '自理', lunch: 'Geirabakarí 麵包＋熱狗墊胃', dinner: 'Messinn 魚盤（需訂位）' },
+  10: { breakfast: '自理（前晚買好）', lunch: '機上', dinner: '—' },
+};
 
 export const TRIP_START = '2026-07-12';
 export const TRIP_END = '2026-07-21';
@@ -240,6 +255,7 @@ export const DAYS: Day[] = [
 
 // 合併研究工作流的擴充說明與「相關資訊」連結（覆寫 desc、補上 infoUrl/infoLabel）
 for (const d of DAYS) {
+  d.meals = MEALS[d.day];
   for (const s of d.stops) {
     const e = ENRICHMENT[s.id];
     if (!e) continue;

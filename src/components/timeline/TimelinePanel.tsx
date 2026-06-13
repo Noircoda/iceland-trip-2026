@@ -143,39 +143,63 @@ export default function TimelinePanel() {
 
   return (
     <div ref={rootRef} className="thin-scroll h-full overflow-y-auto overscroll-contain rounded-2xl" style={{ background: 'var(--paper)', boxShadow: 'var(--shadow-lg)' }}>
-      {/* Day header（平塗日色，無紋理） */}
-      <div className="sticky top-0 z-10 px-4 pb-3.5 pt-4" style={{ background: day.color }}>
+      {/* Day header（平塗日色，緊湊單區塊） */}
+      <div className="sticky top-0 z-10 px-4 pb-2.5 pt-3" style={{ background: day.color }}>
         <div className="flex items-baseline gap-2 text-white">
-          <span className="rounded-md bg-white/20 px-2 py-0.5 text-[13px] font-bold tracking-wide">Day {day.day}</span>
-          <span className="text-xs font-medium text-white/85">{day.date.slice(5).replace('-', '/')}（{day.weekday}）</span>
+          <span className="shrink-0 rounded-md bg-white/20 px-1.5 py-0.5 text-[12px] font-bold tracking-wide">Day {day.day}</span>
+          <h2 className="truncate text-[15px] font-semibold leading-tight">{day.title}</h2>
         </div>
-        <h2 className="mt-2 text-[17px] font-semibold leading-tight text-white">{day.title}</h2>
-        <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[11px] font-medium text-white/90">
-          <span className="flex items-center gap-1"><Car size={12} strokeWidth={1.8} /> {day.driveKm} km · {day.driveTime}</span>
-          <span className="flex items-center gap-1"><Sun size={12} strokeWidth={1.8} /> {day.sunrise}–{day.sunset}</span>
+        <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[10.5px] font-medium text-white/85">
+          <span>{day.date.slice(5).replace('-', '/')}（{day.weekday}）</span>
+          <span className="flex items-center gap-1"><Car size={11} strokeWidth={1.8} /> {day.driveKm} km · {day.driveTime}</span>
+          <span className="flex items-center gap-1"><Sun size={11} strokeWidth={1.8} /> {day.sunrise}–{day.sunset}</span>
         </div>
       </div>
 
-      <div className="px-3 pb-28 pt-3 lg:pb-6">
-        {/* 硬時限 */}
-        {day.hardDeadlines.length > 0 && (
-          <div className="mb-2.5 rounded-xl px-3 py-2" style={{ background: 'rgba(176,118,106,0.1)', border: '1px solid rgba(176,118,106,0.2)' }}>
-            {day.hardDeadlines.map(h => (
-              <p key={h} className="flex items-center gap-1.5 text-[11px] font-medium leading-5" style={{ color: '#9a5448' }}>
-                <Clock size={12} strokeWidth={2} className="shrink-0" /> {h}
-              </p>
-            ))}
+      <div className="px-3 pb-28 pt-2.5 lg:pb-6">
+        {/* 今日餐食 */}
+        {day.meals && (
+          <div className="mb-2 flex gap-2 rounded-xl px-3 py-1.5" style={{ background: 'var(--paper-raised)', border: '1px solid var(--hairline)' }}>
+            <UtensilsCrossed size={12} strokeWidth={2} className="mt-0.5 shrink-0" style={{ color: 'var(--ink-faint)' }} />
+            <div className="min-w-0 flex-1 space-y-0.5">
+              {([['早', day.meals.breakfast], ['午', day.meals.lunch], ['晚', day.meals.dinner]] as const).map(
+                ([k, v]) =>
+                  v && (
+                    <p key={k} className="flex gap-2 text-[11px] leading-snug">
+                      <span className="w-3.5 shrink-0 text-center font-bold" style={{ color: day.color }}>{k}</span>
+                      <span style={{ color: v.includes('自理') ? 'var(--ink-faint)' : 'var(--ink)' }}>{v}</span>
+                    </p>
+                  ),
+              )}
+            </div>
           </div>
         )}
-        {/* 彈性 */}
-        <details className="group mb-3 rounded-xl px-3 py-2" style={{ background: 'var(--paper-raised)', border: '1px solid var(--hairline)' }}>
+
+        {/* 時限與彈性（合併、預設收合，節省空間） */}
+        <details className="group mb-2 rounded-xl px-3 py-1.5" style={{ background: 'var(--paper-raised)', border: '1px solid var(--hairline)' }}>
           <summary className="flex cursor-pointer list-none items-center justify-between text-[11px] font-semibold" style={{ color: 'var(--ink-soft)' }}>
-            彈性調整建議
+            <span className="flex items-center gap-2">
+              {day.hardDeadlines.length > 0 && (
+                <span className="flex items-center gap-1" style={{ color: '#9a5448' }}>
+                  <Clock size={11} strokeWidth={2} /> {day.hardDeadlines.length} 個硬時限
+                </span>
+              )}
+              <span>彈性建議</span>
+            </span>
             <ChevronDown size={14} strokeWidth={2} className="transition group-open:rotate-180" />
           </summary>
+          {day.hardDeadlines.length > 0 && (
+            <ul className="mt-1.5 space-y-0.5">
+              {day.hardDeadlines.map(h => (
+                <li key={h} className="flex items-center gap-1.5 text-[11px] leading-snug" style={{ color: '#9a5448' }}>
+                  <Clock size={11} strokeWidth={2} className="shrink-0" /> {h}
+                </li>
+              ))}
+            </ul>
+          )}
           <ul className="mt-1.5 space-y-1">
             {day.flexNotes.map(n => (
-              <li key={n} className="text-[11px] leading-5" style={{ color: 'var(--ink-soft)' }}>· {n}</li>
+              <li key={n} className="text-[11px] leading-snug" style={{ color: 'var(--ink-soft)' }}>· {n}</li>
             ))}
           </ul>
         </details>
