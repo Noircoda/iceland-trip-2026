@@ -35,7 +35,7 @@ export default function Overview() {
                 冰島環島手冊 <span className="aurora-text">2026</span>
               </h1>
               <p className="text-[11px] font-semibold tracking-wide text-slate-300 sm:text-xs">
-                7/12 – 7/21・順時針環島・每日結尾都是住宿
+                7/12 – 7/21・順時針環島
               </p>
             </div>
           </div>

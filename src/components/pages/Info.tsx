@@ -53,7 +53,7 @@ export default function Info() {
         </div>
 
         <p className="mt-5 text-center text-[10px] text-slate-400">
-          冰島環島手冊 2026・資料整理自行程規劃 v2・地圖 © OpenFreeMap / OpenStreetMap
+          冰島環島手冊 2026・地圖 © OpenFreeMap / OpenStreetMap
         </p>
       </div>
     </motion.div>
