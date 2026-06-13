@@ -1,4 +1,7 @@
 // 產生 PWA 圖示：icons/icon.svg → pwa-192/512、apple-touch-icon
+// 注意：sharp 已從 devDependencies 移除（它的跨平台原生二進位會破壞 CI 的 npm ci）。
+// 圖示已產生並 commit 在 public/icons/，平時不需重跑。
+// 若要重新產生圖示，先臨時安裝 sharp：  npm i --no-save sharp  然後  node scripts/gen-icons.mjs
 import sharp from 'sharp';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';

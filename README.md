@@ -48,7 +48,7 @@ npm run build    # 產出 dist/（含 PWA service worker）
 node --experimental-strip-types scripts/fetch-routes.mjs
 ```
 
-其他腳本：`scripts/resolve-coords.mjs`（Google Maps 短連結 → 座標）、`scripts/gen-icons.mjs`（PWA 圖示）。
+其他腳本：`scripts/resolve-coords.mjs`（Google Maps 短連結 → 座標）、`scripts/gen-icons.mjs`（PWA 圖示，需臨時安裝 sharp：`npm i --no-save sharp`——sharp 不在 devDependencies，因為它的跨平台原生二進位會破壞 CI 的 `npm ci`；圖示已 commit，平時不需重跑）。
 
 ## 技術
 
