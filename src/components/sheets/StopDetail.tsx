@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import { X, Navigation, MapPin, BookOpen, Ticket, Clock, Star, Wallet, Car } from 'lucide-react';
-import { gmapsNavUrl, gmapsPlaceUrl } from '../../data/itinerary';
+import { X, Navigation, BookOpen, Ticket, Clock, Star, Wallet, Car } from 'lucide-react';
+import { gmapsNavUrl } from '../../data/itinerary';
 import { stopById, useTrip } from '../../store/useTrip';
 
 export default function StopDetail({ stopId }: { stopId: string }) {
@@ -92,25 +92,22 @@ export default function StopDetail({ stopId }: { stopId: string }) {
               className="flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-white transition active:scale-[0.99]"
               style={{ background: day.color, boxShadow: 'var(--shadow-md)' }}
             >
-              <Navigation size={16} strokeWidth={2} fill="#fff" /> 導航到這裡
+              <Navigation size={16} strokeWidth={2} fill="#fff" /> Google Maps 導航
             </a>
-            <div className="grid grid-cols-2 gap-2">
-              <a href={gmapsPlaceUrl(stop)} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-semibold transition" style={{ background: 'var(--wash)', color: 'var(--ink)' }}>
-                <MapPin size={14} strokeWidth={2} /> Google Maps
-              </a>
-              {stop.infoUrl ? (
-                <a href={stop.infoUrl} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-semibold transition" style={{ background: 'var(--wash)', color: 'var(--ink)' }}>
-                  <BookOpen size={14} strokeWidth={2} /> {stop.infoLabel ?? '相關資訊'}
-                </a>
-              ) : (
-                <span className="flex items-center justify-center rounded-xl py-2.5 text-xs font-medium" style={{ background: 'var(--paper)', color: 'var(--ink-faint)' }}>—</span>
-              )}
-              {bookingUrl && (
-                <a href={bookingUrl} target="_blank" rel="noreferrer" className="col-span-2 flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-semibold transition" style={{ background: 'var(--wash)', color: 'var(--ink)' }}>
-                  <Ticket size={14} strokeWidth={2} /> {stop.links?.booking ? '預約 / 訂位' : '官方網站'}
-                </a>
-              )}
-            </div>
+            {(stop.infoUrl || bookingUrl) && (
+              <div className="flex gap-2">
+                {stop.infoUrl && (
+                  <a href={stop.infoUrl} target="_blank" rel="noreferrer" className="flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-semibold transition" style={{ background: 'var(--wash)', color: 'var(--ink)' }}>
+                    <BookOpen size={14} strokeWidth={2} /> {stop.infoLabel ?? '相關資訊'}
+                  </a>
+                )}
+                {bookingUrl && (
+                  <a href={bookingUrl} target="_blank" rel="noreferrer" className="flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-semibold transition" style={{ background: 'var(--wash)', color: 'var(--ink)' }}>
+                    <Ticket size={14} strokeWidth={2} /> {stop.links?.booking ? '預約 / 訂位' : '官方網站'}
+                  </a>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </motion.div>

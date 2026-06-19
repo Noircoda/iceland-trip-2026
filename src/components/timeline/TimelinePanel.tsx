@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
-import { Car, Footprints, Clock, Star, AlertTriangle, UtensilsCrossed, Scissors, ChevronRight, Moon, Sun, ChevronDown } from 'lucide-react';
+import { Car, Footprints, Clock, Star, AlertTriangle, UtensilsCrossed, Scissors, ChevronRight, Moon, Sun, ChevronDown, LogOut } from 'lucide-react';
 import type { Stop } from '../../data/itinerary';
 import { dayOf, useTrip } from '../../store/useTrip';
 
@@ -203,6 +203,23 @@ export default function TimelinePanel() {
             ))}
           </ul>
         </details>
+
+        {/* 從前一晚住宿出發 */}
+        {day.start && (
+          <div className="mb-2 flex items-center gap-2.5 rounded-xl px-3 py-2" style={{ background: `color-mix(in srgb, ${day.color} 9%, var(--paper-raised))`, border: `1px solid color-mix(in srgb, ${day.color} 22%, var(--hairline))` }}>
+            <LogOut size={15} strokeWidth={2} style={{ color: day.color }} className="shrink-0" />
+            <div className="min-w-0 flex-1">
+              <p className="text-[12px] font-semibold leading-tight" style={{ color: 'var(--ink)' }}>
+                {day.start.time} 出發 · 從 {day.start.from}
+              </p>
+              {day.stops[0]?.driveFromPrev && (
+                <p className="mt-0.5 flex items-center gap-1 text-[10.5px]" style={{ color: 'var(--ink-soft)' }}>
+                  <Car size={10} strokeWidth={1.8} /> 到第一站 {day.stops[0].driveFromPrev.km} km · 約 {day.stops[0].driveFromPrev.min} 分
+                </p>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* 停靠點 rail */}
         <div className="relative">
